@@ -60,11 +60,13 @@ func PrintPrettyStack(rvr interface{}) {
 	s := prettyStack{}
 	out, err := s.parse(debugStack, rvr)
 	defer sentry.Flush(5 * time.Second)
-	sentry.CaptureException(errors.New(string(out)))
+
 	if err == nil {
+		sentry.CaptureException(errors.New(string(out)))
 		os.Stderr.Write(out)
 	} else {
 		// print stdlib output as a fallback
+		sentry.CaptureException(errors.New(string(debug.Stack())))
 		os.Stderr.Write(debugStack)
 	}
 }
