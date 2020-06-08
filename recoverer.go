@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"runtime/debug"
@@ -16,14 +15,6 @@ import (
 
 	"github.com/getsentry/sentry-go"
 )
-
-// InitRecoverer initializes whole sentry SDK by creating new `Client` and binding it to the current `Hub`
-func InitRecoverer(options sentry.ClientOptions) {
-	err := sentry.Init(options)
-	if err != nil {
-		log.Fatalf("sentry.Init recoverer: %s", err)
-	}
-}
 
 // Recoverer is a middleware that recovers from panics, logs the panic (and a
 // backtrace), and returns a HTTP 500 (Internal Server Error) status if
