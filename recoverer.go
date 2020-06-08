@@ -11,6 +11,7 @@ import (
 	"os"
 	"runtime/debug"
 	"strings"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 )
@@ -28,6 +29,7 @@ func Recoverer(next http.Handler) http.Handler {
 				logEntry := GetLogEntry(r)
 				if logEntry != nil {
 					sentry.CaptureException(errors.New(string(debug.Stack())))
+					sentry.Flush(2 * time.Second)
 					logEntry.Panic(rvr, debug.Stack())
 				} else {
 					PrintPrettyStack(rvr)
