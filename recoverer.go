@@ -11,6 +11,8 @@ import (
 	"os"
 	"runtime/debug"
 	"strings"
+
+	"github.com/getsentry/sentry-go"
 )
 
 // Recoverer is a middleware that recovers from panics, logs the panic (and a
@@ -25,6 +27,7 @@ func Recoverer(next http.Handler) http.Handler {
 
 				logEntry := GetLogEntry(r)
 				if logEntry != nil {
+					sentry.CaptureException(errors.New(string(debug.Stack())))
 					logEntry.Panic(rvr, debug.Stack())
 				} else {
 					PrintPrettyStack(rvr)
