@@ -37,8 +37,9 @@ func Recoverer(next http.Handler) http.Handler {
 
 				logEntry := GetLogEntry(r)
 				if logEntry != nil {
+					defer sentry.Flush(5 * time.Second)
 					sentry.CaptureException(errors.New(string(debug.Stack())))
-					sentry.Flush(2 * time.Second)
+
 					logEntry.Panic(rvr, debug.Stack())
 				} else {
 					PrintPrettyStack(rvr)
@@ -58,8 +59,8 @@ func PrintPrettyStack(rvr interface{}) {
 	debugStack := debug.Stack()
 	s := prettyStack{}
 	out, err := s.parse(debugStack, rvr)
+	defer sentry.Flush(5 * time.Second)
 	sentry.CaptureException(errors.New(string(out)))
-	sentry.Flush(2 * time.Second)
 	if err == nil {
 		os.Stderr.Write(out)
 	} else {
