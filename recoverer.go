@@ -17,8 +17,8 @@ import (
 	"github.com/getsentry/sentry-go"
 )
 
-// Init initializes whole sentry SDK by creating new `Client` and binding it to the current `Hub`
-func Init(options sentry.ClientOptions) {
+// InitRecoverer initializes whole sentry SDK by creating new `Client` and binding it to the current `Hub`
+func InitRecoverer(options sentry.ClientOptions) {
 	err := sentry.Init(options)
 	if err != nil {
 		log.Fatalf("sentry.Init recoverer: %s", err)
